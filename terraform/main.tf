@@ -60,9 +60,9 @@ resource "aws_iam_role_policy_attachment" "lambda_policy_attachment" {
 }
 
 resource "null_resource" "package_build" {
- #triggered only when the sha1 of the directory changes
- triggers = {
-    dir_sha1 = sha1(join("", [for f in fileset("${local.lambda_function_sources_path}/${var.lambda_function_name}", "*"): filesha1("${local.lambda_function_sources_path}/${var.lambda_function_name}/${f}")]))
+  #triggered only when the sha1 of the directory changes
+  triggers = {
+    dir_sha1 = sha1(join("", [for f in fileset("${local.lambda_function_sources_path}/${var.lambda_function_name}", "*") : filesha1("${local.lambda_function_sources_path}/${var.lambda_function_name}/${f}")]))
   }
 
   #for installing packages and zipping the lambda function
@@ -92,7 +92,7 @@ resource "aws_lambda_function" "this" {
   depends_on = [null_resource.package_build] # triggered only when zip file is created
 
   lifecycle {
-    replace_triggered_by = [ null_resource.package_build ] #deploy the lambda function when the zip file is updated
+    replace_triggered_by = [null_resource.package_build] #deploy the lambda function when the zip file is updated
   }
 }
 
