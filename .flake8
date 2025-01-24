@@ -1,0 +1,4 @@
+[flake8]
+exclude = .eggs, setup.py, example, .cdk, out, .git, dist, .md,.yaml, .txt,.ini, cdk/assets/*
+max-line-length = 120
+max-complexity = 15

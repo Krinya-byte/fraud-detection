@@ -1,0 +1,25 @@
+@startuml
+'!$AWS_DARK = true
+
+!define AWSPuml https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/v19.0/dist
+
+!include AWSPuml/AWSCommon.puml
+!include AWSPuml/General/Users.puml
+!include AWSPuml/Storage/SimpleStorageService.puml
+!include AWSPuml/Compute/Lambda.puml
+!include AWSPuml/ArtificialIntelligence/SageMakerNotebook.puml
+
+
+
+Users(user, "User", "user")
+SimpleStorageService(s3_preprocessed, "AWS S3", "Preprocessed Files")
+SimpleStorageService(s3_curated, "AWS S3", "Curated Files")
+Lambda(lambda, "Lambda", "Preprocess CSV")
+SageMakerNotebook(notebook,"Notebook","Model training and evaluation")
+
+
+user --> s3_preprocessed
+s3_preprocessed --> lambda
+lambda --> s3_curated
+s3_curated --> notebook
+@enduml
