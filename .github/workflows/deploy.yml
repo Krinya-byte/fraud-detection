@@ -1,0 +1,67 @@
+name: Deploy Terraform
+
+on:
+  push:
+    branches:
+      - main # Or your default branch
+  pull_request:
+    branches:
+      - main # Or your default branch
+
+permissions:
+  contents: read
+  id-token: write # Required for OIDC authentication
+
+jobs:
+  terraform:
+    name: Terraform Apply
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./terraform # Set working directory for terraform commands
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Optional: Configure AWS Credentials using OIDC (Recommended)
+      # Replace with your AWS role ARN and region
+      # - name: Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     role-to-assume: arn:aws:iam::YOUR_ACCOUNT_ID:role/YOUR_GITHUB_ACTIONS_ROLE
+      #     aws-region: YOUR_AWS_REGION
+
+      # Alternative: Configure AWS Credentials using Secrets (Simpler, less secure)
+      - name: Configure AWS Credentials (Secrets)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1 # Specify your desired AWS region here
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        # with:
+        # Optional: Specify terraform version
+        # terraform_version: 1.x.x
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Plan
+        id: plan
+        # Only run plan on pull requests or pushes to main
+        if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
+        run: terraform plan -no-color
+        # To pass plan output to apply step (optional):
+        # run: terraform plan -out=tfplan -no-color
+
+      - name: Terraform Apply
+        # Only run apply on pushes to main branch
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve
+        # If using plan output:
+        # run: terraform apply -auto-approve tfplan

@@ -30,3 +30,39 @@ variable "lambda_timeout" {
   type        = number
   default     = 30
 }
+
+variable "sagemaker_domain_name" {
+  description = "Name for the SageMaker Studio Domain"
+  type        = string
+  default     = "yettel-fraud-studio-domain"
+}
+
+variable "sagemaker_user_profile_name" {
+  description = "Name for the SageMaker Studio User Profile"
+  type        = string
+  default     = "default-user"
+}
+
+variable "api_gateway_name" {
+  description = "Name for the API Gateway"
+  type        = string
+  default     = "s3-upload-api"
+}
+
+variable "api_lambda_function_name" {
+  description = "Name for the Lambda function that generates pre-signed URLs"
+  type        = string
+  default     = "s3-presigned-url-generator"
+}
+
+variable "cognito_user_pool_name" {
+  description = "Name for the Cognito User Pool"
+  type        = string
+  default     = "yettel-fraud-detection-users"
+}
+
+variable "cognito_user_pool_client_name" {
+  description = "Name for the Cognito User Pool Client"
+  type        = string
+  default     = "app-client"
+}
