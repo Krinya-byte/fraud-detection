@@ -281,7 +281,7 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
   depends_on = [aws_lambda_permission.landing_bucket]
 }
 
-# --- Upload Dataset --- 
+# --- Upload Dataset ---
 
 resource "aws_s3_object" "dataset_upload" {
   bucket = aws_s3_bucket.landing_bucket.id
@@ -295,7 +295,7 @@ resource "aws_s3_object" "dataset_upload" {
   depends_on = [aws_s3_bucket.landing_bucket]
 }
 
-# --- SageMaker Studio --- 
+# --- SageMaker Studio ---
 
 # Data source for default VPC
 data "aws_vpc" "default" {

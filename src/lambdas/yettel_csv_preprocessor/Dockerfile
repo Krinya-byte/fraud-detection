@@ -9,4 +9,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY yettel_csv_preprocessor.py .
 
-CMD ["yettel_csv_preprocessor.lambda_handler"] 
+CMD ["yettel_csv_preprocessor.lambda_handler"]
